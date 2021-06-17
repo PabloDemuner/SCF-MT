@@ -25,28 +25,27 @@ public class CategoriaController {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-	
+
 	@GetMapping
 	public List<Categoria> listar() {
 		return categoriaRepository.findAll();
 	}
-	
-	
-	//@ResponseStatus(HttpStatus.CREATED)
+
+	// @ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public ResponseEntity<Categoria> adicionar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);
-		
+
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
 				.buildAndExpand(categoriaSalva.getId()).toUri();
 		response.setHeader("Location", uri.toASCIIString());
-		
+
 		return ResponseEntity.created(uri).body(categoriaSalva);
 	}
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Categoria> buscaId(@PathVariable Long id) {
 		Categoria categoria = categoriaRepository.findById(id).orElse(null);
-		return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();	 
+		return categoria != null ? ResponseEntity.ok(categoria) : ResponseEntity.notFound().build();
 	}
 }
