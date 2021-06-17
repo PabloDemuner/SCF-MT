@@ -50,4 +50,10 @@ public class PessoaController {
 		Pessoa pessoa = pessoaRepository.findById(id).orElse(null);
 		return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
 	}
+
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@DeleteMapping("/{id}")
+	public void remover(@PathVariable Long id) {
+		pessoaRepository.deleteById(id);
+	}
 }
