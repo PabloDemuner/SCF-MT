@@ -29,7 +29,7 @@ public class PessoaService {
 		pessoaRepository.save(pessoaSalva);
 	}
 
-	private Pessoa buscaPessoaPeloCogido(Long id) {
+	public Pessoa buscaPessoaPeloCogido(Long id) {
 		Pessoa pessoaSalva = this.pessoaRepository.findById(id)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
 		BeanUtils.copyProperties(id, pessoaSalva, "id");

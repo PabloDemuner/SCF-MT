@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.scfapi.service.PessoaInexistenteOuInativoException;
+
 //Classe de tratamento de Erros Exceptions
 
 @ControllerAdvice
@@ -114,4 +116,14 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
+	
+	//Faz o tratamento de exceptions de lançamentos com pessoa Inexistente ou Inativa
+			@ExceptionHandler({PessoaInexistenteOuInativoException.class})
+			public ResponseEntity<Object> PessoaInexistenteOuInativoException(PessoaInexistenteOuInativoException ex, WebRequest request) {
+				String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
+						LocaleContextHolder.getLocale());
+				String mensagemDesenvolvedor = ex.toString();
+				List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+				return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+			}
 }

@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.scfapi.model.Lancamento;
-import com.scfapi.model.Pessoa;
 import com.scfapi.repository.LancamentoRepository;
-import com.scfapi.service.PessoaService;
+import com.scfapi.service.LancamentoService;
 
 @RestController
 @RequestMapping("/lancamentos")
@@ -27,9 +26,9 @@ public class LancamentoController {
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
-
+	
 	@Autowired
-	private PessoaService pessoaService;
+	private LancamentoService lancamentoService;
 
 	@GetMapping
 	public List<Lancamento> listar() {
@@ -45,7 +44,7 @@ public class LancamentoController {
 	// @ResponseStatus(value = HttpStatus.CREATED)
 		@PostMapping
 		private ResponseEntity<Lancamento> adicionar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
-			Lancamento LancamentoSalva = lancamentoRepository.save(lancamento);
+			Lancamento LancamentoSalva = lancamentoService.salvar(lancamento);
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(LancamentoSalva.getId())
 					.toUri();
 			response.setHeader("Location", uri.toASCIIString());
