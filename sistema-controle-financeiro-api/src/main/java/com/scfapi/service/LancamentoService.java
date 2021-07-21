@@ -12,18 +12,19 @@ import com.scfapi.repository.PessoaRepository;
 
 @Service
 public class LancamentoService {
-	
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 
 	public Lancamento salvar(Lancamento lancamento) {
-		Optional<Pessoa> pessoaSalva =  pessoaRepository.findById(Optional.ofNullable(lancamento.getPessoa().getId()).orElse(0L));
-		if(!pessoaSalva.isPresent() || !pessoaSalva.get().getAtivo()) {
+		Optional<Pessoa> pessoaSalva = pessoaRepository
+				.findById(Optional.ofNullable(lancamento.getPessoa().getId()).orElse(0L));
+		if (!pessoaSalva.isPresent() || !pessoaSalva.get().getAtivo()) {
 			throw new PessoaInexistenteOuInativoException();
 		}
-	return lancamentoRepository.save(lancamento);
-	}	
+		return lancamentoRepository.save(lancamento);
+	}
 }
