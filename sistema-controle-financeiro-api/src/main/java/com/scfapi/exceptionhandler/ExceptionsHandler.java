@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.scfapi.service.PessoaInexistenteOuInativoException;
+
 //Classe de tratamento de Erros Exceptions
 
 @ControllerAdvice
@@ -28,16 +31,17 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 
 	@Autowired
 	private MessageSource messageSource;
-	
-	/*Tratamento de erro para caso o usuario ou cliente insira campos errados
-	 * ou nulos onde não é aceito
+
+	/*
+	 * Tratamento de erro para caso o usuario ou cliente insira campos errados ou
+	 * nulos onde não é aceito
 	 */
 	@Override
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
-		
+
 		String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
-		String mensagemDesenvolvedor = ex.getCause() != null ? ex.getCause().toString(): ex.toString();
+		String mensagemDesenvolvedor = ex.getCause() != null ? ex.getCause().toString() : ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
 	}
@@ -70,8 +74,8 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
-	
-	//Lista de erros
+
+	// Lista de erros
 	private List<Erro> criarListadeErros(BindingResult bindingResult) {
 		List<Erro> erros = new ArrayList<>();
 
@@ -102,5 +106,28 @@ public class ExceptionsHandler extends ResponseEntityExceptionHandler {
 			return mensagemDesenvolvedor;
 		}
 
+	}
+
+	// Faz o tratamento de exceptions dos campos lançamentos
+	@ExceptionHandler({ DataIntegrityViolationException.class })
+	public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex,
+			WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("recurso.operacao-nao-permitida", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.getMostSpecificCause().toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+
+	// Faz o tratamento de exceptions de lançamentos com pessoa Inexistente ou
+	// Inativa
+	@ExceptionHandler({ PessoaInexistenteOuInativoException.class })
+	public ResponseEntity<Object> PessoaInexistenteOuInativoException(PessoaInexistenteOuInativoException ex,
+			WebRequest request) {
+		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 }

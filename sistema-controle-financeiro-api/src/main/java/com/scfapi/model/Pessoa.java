@@ -6,7 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name= "pessoa")
@@ -55,6 +58,15 @@ public class Pessoa {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+	
+	/*@JsonIgnore @Transient Para o Hibernat e o Jackson não entender como uma propriedade
+	 * para não serealizar ou salvar em Banco
+	 */
+	@JsonIgnore
+	@Transient
+	public boolean isPresent() {
+		return !this.ativo;
 	}
 
 	@Override
