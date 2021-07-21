@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.scfapi.controller.filter.LancamentoFilter;
 import com.scfapi.model.Lancamento;
 import com.scfapi.repository.LancamentoRepository;
 import com.scfapi.service.LancamentoService;
@@ -31,8 +32,8 @@ public class LancamentoController {
 	private LancamentoService lancamentoService;
 
 	@GetMapping
-	public List<Lancamento> listar() {
-		return lancamentoRepository.findAll();
+	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
+		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
 
 	@GetMapping("/{id}")

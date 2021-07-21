@@ -45,7 +45,7 @@ public class Lancamento {
 	@NotNull
 	private BigDecimal valor;
 	private String observacao;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
