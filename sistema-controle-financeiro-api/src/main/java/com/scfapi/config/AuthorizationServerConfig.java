@@ -26,6 +26,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clientsConfigure) throws Exception {
 		
+		//Configurações de tipos de escopos para cada tipo de cliente
 		clientsConfigure.inMemory()
 		.withClient("angular")
 		.secret("$2a$10$G1j5Rf8aEEiGc/AET9BA..xRR.qCpOUzBZoJd8ygbGy6tb3jsMT9G")
@@ -33,6 +34,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		.authorizedGrantTypes("password", "refresh_token")
 		.accessTokenValiditySeconds(900)
 		.refreshTokenValiditySeconds(3600 * 12);
+//		para continuar adicionando novos escopos baseado nas regras de negocio
+//		.and()
+//		.withClient("")
+//		.secret("")
+//		.scopes("read", "write")
+//		.authorizedGrantTypes("password", "refresh_token")
+//		.accessTokenValiditySeconds(900)
+//		.refreshTokenValiditySeconds(3600 * 12);
 	}
 	
 	@Override
