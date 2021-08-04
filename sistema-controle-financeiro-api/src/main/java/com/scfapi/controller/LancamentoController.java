@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.scfapi.controller.filter.LancamentoFilter;
+import com.scfapi.controller.filter.ResumoLancamento;
 import com.scfapi.model.Lancamento;
 import com.scfapi.repository.LancamentoRepository;
 import com.scfapi.service.LancamentoService;
@@ -37,13 +38,19 @@ public class LancamentoController {
 	private LancamentoService lancamentoService;
 
 	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISA_LANCAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
+	
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
+	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		return lancamentoRepository.resumir(lancamentoFilter, pageable);
+	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasAuthority('ROLE_PESQUISA_LANCAMENTO')")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> buscaId(@PathVariable Long id) {
 		Lancamento lancamento = lancamentoRepository.findById(id).orElse(null);
 		return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();

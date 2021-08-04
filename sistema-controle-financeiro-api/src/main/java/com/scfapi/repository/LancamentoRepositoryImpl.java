@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.ObjectUtils;
 
 import com.scfapi.controller.filter.LancamentoFilter;
+import com.scfapi.controller.filter.ResumoLancamento;
 import com.scfapi.model.Lancamento;
 //Consultas customizadas com Criteria
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
@@ -25,7 +26,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
 	private EntityManager entityManager;
 
 	
-	@Override
+	@Override //Filtro de Lancamentos
 	public Page<Lancamento> filtrar(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<Lancamento> criteriaQuery = criteriaBuilder.createQuery(Lancamento.class);
@@ -40,6 +41,36 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
 		
 		adicionarestricoesDePaginacao(typedQuery, pageable);
 		
+		return new PageImpl<>(typedQuery.getResultList(), pageable, totalPaginas(lancamentoFilter));
+	}
+	
+	@Override // Resumo de lancamentos
+	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ResumoLancamento> criteriaQuery = criteriaBuilder.createQuery(ResumoLancamento.class);
+
+		Root<Lancamento> root = criteriaQuery.from(Lancamento.class);
+
+		criteriaQuery.select(criteriaBuilder.construct(ResumoLancamento.class
+				, root.get("id")
+				, root.get("descricao")
+				,root.get("dataVencimento")
+				, root.get("dataPagamento")
+				, root.get("valor")
+				, root.get("tipo")
+				,root.get("categoria").get("nome")
+				, root.get("pessoa").get("nome")));
+				
+
+		// Cria Restrições
+		Predicate[] predicates = criarRestricoes(lancamentoFilter, criteriaBuilder, root);
+		criteriaQuery.where(predicates);
+
+		TypedQuery<ResumoLancamento> typedQuery = entityManager.createQuery(criteriaQuery);
+
+		adicionarestricoesDePaginacao(typedQuery, pageable);
+
 		return new PageImpl<>(typedQuery.getResultList(), pageable, totalPaginas(lancamentoFilter));
 	}
 
@@ -67,7 +98,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
 	}
 	
 	//Efetua contagem de regsitros por página(Pageable)
-	private void adicionarestricoesDePaginacao(TypedQuery<Lancamento> typedQuery, Pageable pageable) {
+	private void adicionarestricoesDePaginacao(TypedQuery<?> typedQuery, Pageable pageable) {
 		
 		int paginaAtual = pageable.getPageNumber();
 		int totalResgistrosPorPagina = pageable.getPageSize();
