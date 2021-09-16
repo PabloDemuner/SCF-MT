@@ -10,7 +10,7 @@ public class ScfApiProperty {
 
 	private final Seguranca seguranca = new Seguranca();
 	
-	private String origemPermitida = "http://localhost:8000";
+	private String origemPermitida = "http://localhost:4200";
 
 	public String getOrigemPermitida() {
 		return origemPermitida;
