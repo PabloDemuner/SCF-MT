@@ -24,12 +24,12 @@ public class PessoaService {
 	}
 
 	public void atualizarPropriedadeAtiva(Long id, Boolean ativo) {
-		Pessoa pessoaSalva = buscaPessoaPeloCogido(id);
+		Pessoa pessoaSalva = buscaPessoaPeloId(id);
 		pessoaSalva.setAtivo(ativo);
 		pessoaRepository.save(pessoaSalva);
 	}
 
-	public Pessoa buscaPessoaPeloCogido(Long id) {
+	public Pessoa buscaPessoaPeloId(Long id) {
 		Pessoa pessoaSalva = this.pessoaRepository.findById(id)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
 		BeanUtils.copyProperties(id, pessoaSalva, "id");

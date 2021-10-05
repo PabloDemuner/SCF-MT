@@ -59,7 +59,7 @@ public class LancamentoController {
 	// @ResponseStatus(value = HttpStatus.CREATED)
 		@PostMapping
 		@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
-		private ResponseEntity<Lancamento> adicionar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
+		public ResponseEntity<Lancamento> adicionar(@Valid @RequestBody Lancamento lancamento, HttpServletResponse response) {
 			Lancamento LancamentoSalva = lancamentoService.salvar(lancamento);
 			URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(LancamentoSalva.getId())
 					.toUri();
