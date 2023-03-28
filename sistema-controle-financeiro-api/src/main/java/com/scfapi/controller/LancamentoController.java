@@ -51,7 +51,7 @@ public class LancamentoController {
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
-	public ResponseEntity<Lancamento> buscaId(@PathVariable Long id) {
+	public ResponseEntity<Lancamento> buscaPorId(@PathVariable Long id) {
 		Lancamento lancamento = lancamentoRepository.findById(id).orElse(null);
 		return lancamento != null ? ResponseEntity.ok(lancamento) : ResponseEntity.notFound().build();
 	}

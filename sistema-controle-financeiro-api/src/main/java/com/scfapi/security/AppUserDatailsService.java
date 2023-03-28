@@ -30,7 +30,7 @@ public class AppUserDatailsService implements UserDetailsService{
 		Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException(
 				"Usuario e ou senha invalidos"));
 		
-		return new User(email, usuario.getSenha(), getPermissoes(usuario));
+		return new UsuarioSistema(usuario, getPermissoes(usuario));
 	}
 
 	//Lista de Permissões de usuários (Roles);
