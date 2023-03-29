@@ -1,7 +1,10 @@
 package com.scfapi.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,4 +30,32 @@ public class LancamentoService {
 		}
 		return lancamentoRepository.save(lancamento);
 	}
+	
+	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = existeLancamento(codigo);
+		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
+			existePessoa(lancamento);
+		}
+
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
+
+		return lancamentoRepository.save(lancamentoSalvo);
+	}
+	
+	private void existePessoa(Lancamento lancamento) {
+		Optional<Pessoa> pessoa = null;
+		if (lancamento.getPessoa().getId() != null) {
+			pessoa = pessoaRepository.findById(lancamento.getPessoa().getId());
+		}
+
+		if (pessoa.isEmpty() || pessoa.get().isPresent()) {
+			throw new IllegalArgumentException();
+		}
+    }
+
+	
+	private Lancamento existeLancamento(Long id) {
+		return lancamentoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+    }
+	
 }
