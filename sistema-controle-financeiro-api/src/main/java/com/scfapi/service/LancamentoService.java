@@ -31,8 +31,8 @@ public class LancamentoService {
 		return lancamentoRepository.save(lancamento);
 	}
 	
-	public Lancamento atualizar(Long codigo, Lancamento lancamento) {
-		Lancamento lancamentoSalvo = existeLancamento(codigo);
+	public Lancamento atualizar(Long id, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = existeLancamento(id);
 		if (!lancamento.getPessoa().equals(lancamentoSalvo.getPessoa())) {
 			existePessoa(lancamento);
 		}

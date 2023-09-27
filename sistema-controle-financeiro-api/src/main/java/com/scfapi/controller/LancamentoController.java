@@ -75,13 +75,12 @@ public class LancamentoController {
 		public void remover(@PathVariable Long id) {
 			lancamentoRepository.deleteById(id);
 		}
-		
-		//TODO Verificar atualização
+
 		@PutMapping("/{id}")
 		@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
-		public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lancamento lancamento) {
+		public ResponseEntity<Lancamento> atualizar(@PathVariable Long id, @Valid @RequestBody Lancamento lancamento) {
 			try {
-				Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);
+				Lancamento lancamentoSalvo = lancamentoService.atualizar(id, lancamento);
 				return ResponseEntity.ok(lancamentoSalvo);
 			} catch (IllegalArgumentException e) {
 				return ResponseEntity.notFound().build();
