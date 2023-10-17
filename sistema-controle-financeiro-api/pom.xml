@@ -22,6 +22,10 @@
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
         <mapstruct-spring-annotations.version>1.1.0</mapstruct-spring-annotations.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        
+        <jasperreports.version>6.20.0</jasperreports.version>
+		<jasperreports-functions.version>6.20.0</jasperreports-functions.version>
+		<jasperreports-fonts.version>6.20.0</jasperreports-fonts.version>
 	</properties>
 	
 	<dependencies>
@@ -122,6 +126,25 @@
             <version>${mapstruct-spring-annotations.version}</version>
         </dependency>
         <!-- END: CodeGen - Lombok/MapStruct -->
+        
+        <!-- JasperReports -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasperreports.version}</version>
+        </dependency>
+                
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-functions</artifactId>
+            <version>${jasperreports-functions.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-fonts</artifactId>
+            <version>${jasperreports-fonts.version}</version>
+        </dependency>
 		
 	</dependencies>
 
