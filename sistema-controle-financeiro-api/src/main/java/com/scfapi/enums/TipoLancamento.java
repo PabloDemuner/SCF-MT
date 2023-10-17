@@ -1,4 +1,4 @@
-package com.scfapi.model;
+package com.scfapi.enums;
 
 public enum TipoLancamento {
 

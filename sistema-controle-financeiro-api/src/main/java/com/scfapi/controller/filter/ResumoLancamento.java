@@ -3,7 +3,7 @@ package com.scfapi.controller.filter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.scfapi.model.TipoLancamento;
+import com.scfapi.enums.TipoLancamento;
 
 //Classe que faz um resumo de lancamentos
 public class ResumoLancamento {
