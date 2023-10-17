@@ -1,6 +1,7 @@
 package com.scfapi.repository;
 
 import java.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,9 @@ import com.scfapi.controller.filter.LancamentoFilter;
 import com.scfapi.controller.filter.ResumoLancamento;
 import com.scfapi.dto.LancamentoEstatisticaCategoriaDTO;
 import com.scfapi.dto.LancamentoEstatisticaDiariaDTO;
+import com.scfapi.dto.LancamentoEstatisticaPessoaDTO;
 import com.scfapi.model.Lancamento;
+
 //Consultas customizadas com Criteria
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
 	
@@ -158,7 +161,7 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery{
 
 	@Override
 	public List<LancamentoEstatisticaDiariaDTO> porDia(LocalDate mesReferencia) {
-CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<LancamentoEstatisticaDiariaDTO> criteriaQuery = criteriaBuilder
 				.createQuery(LancamentoEstatisticaDiariaDTO.class);
@@ -182,6 +185,33 @@ CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		criteriaQuery.groupBy(root.get("tipo"), root.get("dataVencimento"));
 		
 		TypedQuery<LancamentoEstatisticaDiariaDTO> typedQuery = entityManager.createQuery(criteriaQuery);
+		
+		return typedQuery.getResultList();
+	}
+
+	@Override
+	public List<LancamentoEstatisticaPessoaDTO> porPessoa(LocalDate dataInicio, LocalDate dataFim) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		
+		CriteriaQuery<LancamentoEstatisticaPessoaDTO> criteriaQuery = criteriaBuilder
+				.createQuery(LancamentoEstatisticaPessoaDTO.class);
+		
+		Root<Lancamento> root = criteriaQuery.from(Lancamento.class);
+		
+		criteriaQuery.select(criteriaBuilder.construct(LancamentoEstatisticaPessoaDTO.class, 
+				root.get("tipo"),
+				root.get("pessoa"),
+				criteriaBuilder.sum(root.get("valor"))));
+		
+		criteriaQuery.where(
+				criteriaBuilder.greaterThanOrEqualTo(root.get("dataVencimento"),
+						dataInicio),
+				criteriaBuilder.lessThanOrEqualTo(root.get("dataVencimento"),
+						dataFim));
+		
+		criteriaQuery.groupBy(root.get("tipo"), root.get("pessoa"));
+		
+		TypedQuery<LancamentoEstatisticaPessoaDTO> typedQuery = entityManager.createQuery(criteriaQuery);
 		
 		return typedQuery.getResultList();
 	}
