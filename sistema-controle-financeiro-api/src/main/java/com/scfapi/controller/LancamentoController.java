@@ -1,6 +1,8 @@
 package com.scfapi.controller;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -24,6 +26,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.scfapi.controller.filter.LancamentoFilter;
 import com.scfapi.controller.filter.ResumoLancamento;
+import com.scfapi.dto.LancamentoEstatisticaCategoriaDTO;
+import com.scfapi.dto.LancamentoEstatisticaDiariaDTO;
 import com.scfapi.model.Lancamento;
 import com.scfapi.repository.LancamentoRepository;
 import com.scfapi.service.LancamentoService;
@@ -38,6 +42,18 @@ public class LancamentoController {
 	@Autowired
 	private LancamentoService lancamentoService;
 
+	@GetMapping("/estatisticas/por-categoria")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
+	public List<LancamentoEstatisticaCategoriaDTO> porCategoria() {
+		return this.lancamentoRepository.porCategoria(LocalDate.now());
+	}
+	
+	@GetMapping("/estatisticas/por-dia")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
+	public List<LancamentoEstatisticaDiariaDTO> porDia() {
+		return this.lancamentoRepository.porDia(LocalDate.now());
+	}
+	
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
