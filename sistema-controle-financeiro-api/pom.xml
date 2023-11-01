@@ -14,8 +14,8 @@
 	<groupId>com.sistemafinanceiro-api</groupId>
 	<artifactId>sistema-controle-financeiro-api</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>sistema-controle-financeiro-api</name>
-	<description>Demo project for Spring Boot</description>
+	<name>Sistema Controle Financeiro</name>
+	<description>Back-end (REST) do Sistema SCF-MT</description>
 	
 	<properties>
 		<java.version>11</java.version>
@@ -145,11 +145,21 @@
             <artifactId>jasperreports-fonts</artifactId>
             <version>${jasperreports-fonts.version}</version>
         </dependency>
+        <!-- END JasperReports -->
         
+        <!-- Emails -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+        <!-- End Emails -->
+        
+        <!-- http://www.thymeleaf.org -->
+        <dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<!-- End thymeleaf -->
 		
 	</dependencies>
 

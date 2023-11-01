@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.scfapi.enums.TipoLancamento;
 
 import lombok.AccessLevel;
@@ -66,5 +67,10 @@ public class Lancamento {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
+	
+	@JsonIgnore
+	public boolean isReceita() {
+		return TipoLancamento.RECEITA.equals(tipo);
+	}
 	
 }
