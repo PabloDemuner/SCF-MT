@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.mail.internet.MimeMessage;
 
@@ -18,11 +19,15 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import com.scfapi.model.Lancamento;
+import com.scfapi.model.Usuario;
 import com.scfapi.repository.LancamentoRepository;
 
 @Component
 public class EmailService {
 
+	private static final String PATHTEMPLATE = "email/aviso-lancamentos-vencidos";
+	private static final String EMAILEMPRESA = "pablod.teste1@hotmail.com";
+	
 	@Autowired
 	private JavaMailSender mailSender;
 	
@@ -53,6 +58,18 @@ public class EmailService {
 				"Testando", "Olá <br/> Teste ok!");
 		System.out.print("E-mail enviado com sucesso!");
 	}*/
+	
+	public void avisoLancamentosVencidos(List<Lancamento> lancamentosVencidos, List<Usuario> destinatarios) {
+		
+		Map<String, Object> parametros = new HashMap<>();
+		parametros.put("lancamentos", lancamentosVencidos);
+		
+		List<String> emails = destinatarios.stream().map(usuario -> usuario.getEmail())
+				.collect(Collectors.toList());
+		
+		enviarEmail(EMAILEMPRESA, emails, "Lançamentos Vencidos", PATHTEMPLATE, parametros);
+		System.out.print("E-mail enviado com sucesso!");
+	}
 	
 	public void enviarEmail(String remetente, List<String> destinatarios, 
 			String assunto, String template, Map<String, Object> parametros) {

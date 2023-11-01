@@ -1,7 +1,5 @@
 package com.scfapi.service;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
 import java.io.InputStream;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -11,17 +9,19 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import com.scfapi.beans.EmailService;
 import com.scfapi.dto.LancamentoEstatisticaPessoaDTO;
 import com.scfapi.model.Lancamento;
 import com.scfapi.model.Pessoa;
+import com.scfapi.model.Usuario;
 import com.scfapi.repository.LancamentoRepository;
 import com.scfapi.repository.PessoaRepository;
+import com.scfapi.repository.UsuarioRepository;
 
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -31,12 +31,30 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 @Service
 public class LancamentoService {
 
+	private static final String ROLEDESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
+	
+	@Autowired
+	private EmailService emailService;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
 	@Autowired
 	private PessoaRepository pessoaRepository;
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 
+	//@Scheduled(cron = "0 0 6 * * *")
+	@Scheduled(fixedDelay = 1000 * 60 * 30)
+	public void servicoAvisoLancamentosVencidos() {
+		
+		List<Lancamento> lancamentosVencidos = lancamentoRepository
+				.findByDataVencimentoLessThanEqualAndDataPagamentoIsNull(LocalDate.now());
+		List<Usuario> detinatarios = usuarioRepository.findByPermissoesDescricao(ROLEDESTINATARIOS);
+		
+		emailService.avisoLancamentosVencidos(lancamentosVencidos, detinatarios);
+	}
 	public Lancamento salvar(Lancamento lancamento) {
 		Optional<Pessoa> pessoaSalva = pessoaRepository
 				.findById(Optional.ofNullable(lancamento.getPessoa().getId()).orElse(0L));
