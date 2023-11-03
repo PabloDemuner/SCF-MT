@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.scfapi.enums.TipoLancamento;
 
 import lombok.AccessLevel;
@@ -42,6 +43,7 @@ public class Lancamento {
 	
 	@NotNull
 	@ManyToOne
+	@JsonIgnoreProperties("contatos")
 	@JoinColumn(name= "id_pessoa")
 	private Pessoa pessoa;
 	

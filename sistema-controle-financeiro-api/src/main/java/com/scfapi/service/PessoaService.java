@@ -24,9 +24,12 @@ public class PessoaService {
 	public Pessoa atualizar(@PathVariable Long id, @RequestBody Pessoa pessoa) {
 		Pessoa pessoaSalva = pessoaRepository.findById(id)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
-		pessoa.getContatos().forEach(contato -> contato.setPessoa(pessoa));
 		
-		BeanUtils.copyProperties(pessoa, pessoaSalva, "id");
+		pessoaSalva.getContatos().clear();
+		pessoaSalva.getContatos().addAll(pessoa.getContatos());
+		pessoaSalva.getContatos().forEach(contato -> contato.setPessoa(pessoaSalva));
+		
+		BeanUtils.copyProperties(pessoa, pessoaSalva, "id", "contatos");
 		return pessoaRepository.save(pessoaSalva);
 	}
 

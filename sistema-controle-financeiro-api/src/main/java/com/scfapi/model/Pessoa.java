@@ -50,7 +50,7 @@ public class Pessoa {
 	
 	@Valid
 	@JsonIgnoreProperties("pessoa")
-	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Contato> contatos;
 
 	/*@JsonIgnore @Transient Para o Hibernat e o Jackson não entender como uma propriedade
