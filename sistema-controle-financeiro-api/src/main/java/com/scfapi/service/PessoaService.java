@@ -15,12 +15,19 @@ public class PessoaService {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	public Pessoa adicionar(Pessoa pessoa) {
+		pessoa.getContatos().forEach(contato -> contato.setPessoa(pessoa));
+		return pessoaRepository.save(pessoa);
+	}
 
 	public Pessoa atualizar(@PathVariable Long id, @RequestBody Pessoa pessoa) {
-		Pessoa pessoaSalva = this.pessoaRepository.findById(id)
+		Pessoa pessoaSalva = pessoaRepository.findById(id)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
+		pessoa.getContatos().forEach(contato -> contato.setPessoa(pessoa));
+		
 		BeanUtils.copyProperties(pessoa, pessoaSalva, "id");
-		return this.pessoaRepository.save(pessoaSalva);
+		return pessoaRepository.save(pessoaSalva);
 	}
 
 	public void atualizarPropriedadeAtiva(Long id, Boolean ativo) {
@@ -30,10 +37,10 @@ public class PessoaService {
 	}
 
 	public Pessoa buscaPessoaPeloId(Long id) {
-		Pessoa pessoaSalva = this.pessoaRepository.findById(id)
+		Pessoa pessoaSalva = pessoaRepository.findById(id)
 				.orElseThrow(() -> new EmptyResultDataAccessException(1));
 		BeanUtils.copyProperties(id, pessoaSalva, "id");
-		return this.pessoaRepository.save(pessoaSalva);
+		return pessoaRepository.save(pessoaSalva);
 	}
 
 }
