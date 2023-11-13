@@ -1,5 +1,8 @@
 package com.scfapi.controller;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URI;
 import org.springframework.http.HttpHeaders;
 import java.time.LocalDate;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.scfapi.controller.filter.LancamentoFilter;
@@ -39,6 +43,8 @@ import com.scfapi.service.LancamentoService;
 @RestController
 @RequestMapping("/lancamentos")
 public class LancamentoController {
+	
+	private static final String CAMINHOARQUIVO = "F:\\Anexos-API-SCF\\";
 
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
@@ -118,6 +124,16 @@ public class LancamentoController {
 			return ResponseEntity.ok()
 					.header(HttpHeaders.CONTENT_TYPE , MediaType.APPLICATION_PDF_VALUE)
 					.body(relatorio);
+		}
+		
+		@PostMapping("/anexo")
+		@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
+		public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+			OutputStream outputStream = new FileOutputStream(CAMINHOARQUIVO + anexo.getOriginalFilename());
+			System.out.println("Caminho do arquivo " + CAMINHOARQUIVO + "Arquivo " + anexo.getOriginalFilename());
+			outputStream.write(anexo.getBytes());
+			outputStream.close();
+			return "Arquivo Anexado";
 		}
 		
 }

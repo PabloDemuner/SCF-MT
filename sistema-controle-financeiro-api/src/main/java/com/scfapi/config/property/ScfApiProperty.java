@@ -16,8 +16,14 @@ public class ScfApiProperty {
 	
 	private final Mail mail = new Mail();
 	
+	private final S3Key s3 = new S3Key();
+	
 	public Mail getMail() {
 		return mail;
+	}
+	
+	public S3Key getS3Key() {
+		return s3;
 	}
 
 	public String getOrigemPermitida() {
@@ -52,5 +58,12 @@ public class ScfApiProperty {
 		private Integer port;
 		private String username;
 		private String password;
+	}
+	
+	@Getter
+	@Setter
+	public static class S3Key {
+		private String accessKeyId;
+		private String secretAccessKey;
 	}
 }
