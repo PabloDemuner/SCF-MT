@@ -65,5 +65,6 @@ public class ScfApiProperty {
 	public static class S3Key {
 		private String accessKeyId;
 		private String secretAccessKey;
+		private String bucket = "aws-scf-arquivos";
 	}
 }
