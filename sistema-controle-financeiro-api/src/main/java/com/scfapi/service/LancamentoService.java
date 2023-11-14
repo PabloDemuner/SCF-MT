@@ -15,8 +15,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.scfapi.beans.EmailService;
+import com.scfapi.config.aws.S3Service;
 import com.scfapi.dto.LancamentoEstatisticaPessoaDTO;
 import com.scfapi.model.Lancamento;
 import com.scfapi.model.Pessoa;
@@ -36,6 +38,9 @@ public class LancamentoService {
 	private static final String ROLEDESTINATARIOS = "ROLE_PESQUISAR_LANCAMENTO";
 	
 	private static final Logger logger = LoggerFactory.getLogger(Lancamento.class);
+	
+	@Autowired
+	private S3Service s3Service;
 	
 	@Autowired
 	private EmailService emailService;
@@ -80,6 +85,11 @@ public class LancamentoService {
 		if (!pessoaSalva.isPresent() || !pessoaSalva.get().getAtivo()) {
 			throw new PessoaInexistenteOuInativoException();
 		}
+		
+		if (StringUtils.hasText(lancamento.getAnexo())) {
+			s3Service.salvarNaBase(lancamento.getAnexo());
+		}
+		
 		return lancamentoRepository.save(lancamento);
 	}
 	

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.BucketLifecycleConfiguration;
@@ -29,6 +30,7 @@ public class S3Config {
 		
 		AmazonS3 amazonS3 = AmazonS3ClientBuilder.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(credentials))
+				.withRegion(Regions.US_EAST_1)
 				.build();
 		
 		if(!amazonS3.doesBucketExistV2(property.getS3Key().getBucket())) {
@@ -36,7 +38,7 @@ public class S3Config {
 			
 			BucketLifecycleConfiguration.Rule regraExpiracao = new BucketLifecycleConfiguration.Rule()
 					.withId("Regra expiração de arquivos")
-					.withFilter(new LifecycleFilter(new LifecycleTagPredicate(new Tag("espirar","true"))))
+					.withFilter(new LifecycleFilter(new LifecycleTagPredicate(new Tag("expirar","true"))))
 					.withExpirationInDays(1)
 					.withStatus(BucketLifecycleConfiguration.ENABLED);
 			

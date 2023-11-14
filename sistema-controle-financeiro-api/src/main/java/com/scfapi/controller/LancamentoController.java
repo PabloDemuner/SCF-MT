@@ -32,10 +32,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.scfapi.config.aws.S3Service;
 import com.scfapi.controller.filter.LancamentoFilter;
 import com.scfapi.controller.filter.ResumoLancamento;
 import com.scfapi.dto.LancamentoEstatisticaCategoriaDTO;
 import com.scfapi.dto.LancamentoEstatisticaDiariaDTO;
+import com.scfapi.dto.S3AnexoDTO;
 import com.scfapi.model.Lancamento;
 import com.scfapi.repository.LancamentoRepository;
 import com.scfapi.service.LancamentoService;
@@ -45,13 +47,16 @@ import com.scfapi.service.LancamentoService;
 public class LancamentoController {
 	
 	private static final String CAMINHOARQUIVO = "F:\\Anexos-API-SCF\\";
+	
+	@Autowired
+	private S3Service s3Service;
 
+	@Autowired
+	private LancamentoService lancamentoService;
+	
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 	
-	@Autowired
-	private LancamentoService lancamentoService;
-
 	@GetMapping("/estatisticas/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public List<LancamentoEstatisticaCategoriaDTO> porCategoria() {
@@ -128,12 +133,14 @@ public class LancamentoController {
 		
 		@PostMapping("/anexo")
 		@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
-		public String uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
-			OutputStream outputStream = new FileOutputStream(CAMINHOARQUIVO + anexo.getOriginalFilename());
+		public S3AnexoDTO uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
+			/*OutputStream outputStream = new FileOutputStream(CAMINHOARQUIVO + anexo.getOriginalFilename());
 			System.out.println("Caminho do arquivo " + CAMINHOARQUIVO + "Arquivo " + anexo.getOriginalFilename());
 			outputStream.write(anexo.getBytes());
-			outputStream.close();
-			return "Arquivo Anexado";
+			outputStream.close();*/
+			
+			String arquivo = s3Service.salvarAnexo(anexo);
+			return new S3AnexoDTO(arquivo, s3Service.configuraUrl(arquivo));
 		}
 		
 }

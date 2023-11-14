@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -69,6 +70,11 @@ public class Lancamento {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoLancamento tipo;
+	
+	private String anexo;
+	
+	@Transient
+	private String urlAnexo;
 	
 	@JsonIgnore
 	public boolean isReceita() {
