@@ -5,6 +5,7 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.scfapi.enums.TipoLancamento;
+import com.scfapi.repository.listener.LancamentoAnexoListener;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -34,6 +36,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @EqualsAndHashCode
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@EntityListeners(LancamentoAnexoListener.class)
 @Entity
 @Table(name = "lancamento")
 public class Lancamento {

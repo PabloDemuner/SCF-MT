@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.AccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ObjectTagging;
@@ -68,11 +70,6 @@ public class S3Service {
 			throw new RuntimeException("Ocorreu algum problema ao enviar o arquivo para nuvem ", e);
 		}
 	}
-
-
-	private String gerarIdUnico(String originalFilename) {
-		return UUID.randomUUID().toString() + "_" + originalFilename;
-	}
 	
 	public String configuraUrl(String objeto) {
 		return PROTOCOLOURL + property.getS3Key().getBucket() +
@@ -86,6 +83,23 @@ public class S3Service {
 				new ObjectTagging(Collections.emptyList()));
 		
 		amazonS3.setObjectTagging(objectTaggingRequest);
+	}
+
+	public void substituir(String objetoAntigo, String objetoNovo) {
+		if (StringUtils.hasText(objetoAntigo)) {
+			remover(objetoAntigo);
+		}
+		salvarNaBase(objetoNovo);
+	}
+
+	public void remover(String objeto) {
+		DeleteObjectRequest objectRequest = new DeleteObjectRequest(
+				property.getS3Key().getBucket(), objeto);
+		amazonS3.deleteObject(objectRequest);
+	}
+	
+	private String gerarIdUnico(String originalFilename) {
+		return UUID.randomUUID().toString() + "_" + originalFilename;
 	}
 	
 }

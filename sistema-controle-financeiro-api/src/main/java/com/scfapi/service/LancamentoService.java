@@ -99,7 +99,15 @@ public class LancamentoService {
 			existePessoa(lancamento);
 		}
 
-		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "codigo");
+		if (!StringUtils.hasText(lancamento.getAnexo())
+				&& StringUtils.hasText(lancamentoSalvo.getAnexo())) {
+			s3Service.remover(lancamentoSalvo.getAnexo());
+		} else if (StringUtils.hasText(lancamento.getAnexo())
+				&& !lancamento.getAnexo().equals(lancamentoSalvo.getAnexo())) {
+			s3Service.substituir(lancamentoSalvo.getAnexo(), lancamento.getAnexo());
+		}
+		
+		BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
 
 		return lancamentoRepository.save(lancamentoSalvo);
 	}
