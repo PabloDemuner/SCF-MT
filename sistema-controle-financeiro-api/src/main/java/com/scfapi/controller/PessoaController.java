@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.scfapi.dto.PessoaDTO;
 import com.scfapi.model.Pessoa;
 import com.scfapi.repository.PessoaRepository;
 import com.scfapi.service.PessoaService;
@@ -42,11 +43,10 @@ public class PessoaController {
 		return pessoaRepository.findAll(pageable);
 	}
 	
-	// @ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
-	public ResponseEntity<Pessoa> adicionar(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
-		Pessoa pessoaSalva = pessoaService.adicionar(pessoa);
+	public ResponseEntity<PessoaDTO> adicionar(@Valid @RequestBody PessoaDTO pessoa, HttpServletResponse response) {
+		PessoaDTO pessoaSalva = pessoaService.adicionar(pessoa);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(pessoaSalva.getId())
 				.toUri();
 		response.setHeader("Location", uri.toASCIIString());
@@ -70,8 +70,8 @@ public class PessoaController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
-	public ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @Valid @RequestBody Pessoa pessoa) {
-		Pessoa pessoaSalva = pessoaService.atualizar(id, pessoa);
+	public ResponseEntity<PessoaDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PessoaDTO pessoa) {
+		PessoaDTO pessoaSalva = pessoaService.atualizar(id, pessoa);
 		return ResponseEntity.ok(pessoaSalva);
 	}
 	
