@@ -60,13 +60,13 @@ public class LancamentoController {
 	@GetMapping("/estatisticas/por-categoria")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public List<LancamentoEstatisticaCategoriaDTO> porCategoria() {
-		return this.lancamentoRepository.porCategoria(LocalDate.now());
+		return lancamentoRepository.porCategoria(LocalDate.now());
 	}
 	
 	@GetMapping("/estatisticas/por-dia")
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public List<LancamentoEstatisticaDiariaDTO> porDia() {
-		return this.lancamentoRepository.porDia(LocalDate.now());
+		return lancamentoRepository.porDia(LocalDate.now());
 	}
 	
 	@GetMapping
