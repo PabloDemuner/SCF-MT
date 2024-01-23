@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.scfapi.dto.EnderecoViaCepDTO;
 import com.scfapi.dto.PessoaDTO;
+import com.scfapi.model.Lancamento;
 import com.scfapi.model.Pessoa;
 import com.scfapi.repository.PessoaRepository;
 import com.scfapi.service.PessoaService;
@@ -79,5 +81,12 @@ public class PessoaController {
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public void atualizarPropriedadeAtiva(@PathVariable Long id, @RequestBody Boolean ativo) {
 		pessoaService.atualizarPropriedadeAtiva(id, ativo);
+	}
+	
+	@GetMapping("/endereco/{cep}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
+	public ResponseEntity<EnderecoViaCepDTO> buscaEndereco(@PathVariable String cep) throws Exception {
+		EnderecoViaCepDTO endereco = pessoaService.buscaEndereco(cep);
+		return endereco != null ? ResponseEntity.ok(endereco) : ResponseEntity.notFound().build();
 	}
 }
