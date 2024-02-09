@@ -28,6 +28,8 @@
 		<jasperreports-fonts.version>6.20.0</jasperreports-fonts.version>
 		
 		<aws-java-sdk.version>1.11.670</aws-java-sdk.version>
+		
+		<spring-fox.version>3.0.0</spring-fox.version>
 	</properties>
 	
 	<dependencies>
@@ -175,6 +177,13 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.9.0</version>
+		</dependency>
+		
+		<!-- https://springfox.github.io/springfox/docs/current/#dependencies -->
+		<dependency>
+    		<groupId>io.springfox</groupId>
+    		<artifactId>springfox-boot-starter</artifactId>
+    		<version>${spring-fox.version}</version>
 		</dependency>
 		
 	</dependencies>

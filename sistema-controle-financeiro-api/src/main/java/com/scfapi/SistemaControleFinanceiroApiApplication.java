@@ -4,9 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.scfapi.config.property.ScfApiProperty;
 
+@EnableWebMvc
 @SpringBootApplication
 @EnableConfigurationProperties(ScfApiProperty.class)
 public class SistemaControleFinanceiroApiApplication {
