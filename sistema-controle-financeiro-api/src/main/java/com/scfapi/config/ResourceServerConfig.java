@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -32,10 +33,17 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	public void configure(HttpSecurity httpSecurity) throws Exception {
 		
 		httpSecurity.authorizeRequests()
-		.antMatchers("/categorias").permitAll()
-		.anyRequest().authenticated()
+		.antMatchers(HttpMethod.GET,"/swagger-resources/**").permitAll()
+        .antMatchers(HttpMethod.GET,"/swagger-ui/**").permitAll()
+        .antMatchers(HttpMethod.GET,"/v3/api-docs").permitAll()
+        .antMatchers(HttpMethod.GET,"favicon.ico").permitAll()
+        .antMatchers(HttpMethod.GET,"/webjars/").permitAll()
+        .antMatchers("/categorias").permitAll()
+		.anyRequest()
+		.authenticated()
 		.and()
-		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
 		.csrf().disable();
 	}

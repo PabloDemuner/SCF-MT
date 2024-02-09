@@ -31,6 +31,14 @@
 		<spring-fox.version>3.0.0</spring-fox.version>
 	</properties>
 	
+	<repositories>
+    	<repository>
+        	<id>swagger</id>
+        	<name>swagger</name>
+        	<url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+    	</repository>
+	</repositories>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -184,6 +192,12 @@
             <artifactId>springfox-boot-starter</artifactId>
             <version>${spring-fox.version}</version>
         </dependency>
+        
+        <dependency>
+        	<groupId>io.springfox</groupId>
+        	<artifactId>springfox-swagger2</artifactId>
+        	<version>${spring-fox.version}</version>
+    	</dependency>
 		
 	</dependencies>
 
