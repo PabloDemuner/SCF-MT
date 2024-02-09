@@ -40,7 +40,10 @@ import com.scfapi.model.Lancamento;
 import com.scfapi.repository.LancamentoRepository;
 import com.scfapi.service.LancamentoService;
 
+import io.swagger.annotations.Api;
+
 @RestController
+@Api(tags = "Lancamentos")
 @RequestMapping("/lancamentos")
 public class LancamentoController {
 

@@ -24,12 +24,15 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.scfapi.dto.EnderecoViaCepDTO;
 import com.scfapi.dto.PessoaDTO;
-import com.scfapi.model.Lancamento;
 import com.scfapi.model.Pessoa;
 import com.scfapi.repository.PessoaRepository;
 import com.scfapi.service.PessoaService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
+
 @RestController
+@Api(tags = "Pessoa")
 @RequestMapping("/pessoas")
 public class PessoaController {
 
@@ -85,7 +88,9 @@ public class PessoaController {
 	
 	@GetMapping("/endereco/{cep}")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
-	public ResponseEntity<EnderecoViaCepDTO> buscaEndereco(@PathVariable String cep) throws Exception {
+	public ResponseEntity<EnderecoViaCepDTO> buscaEndereco(
+			@ApiParam(name = "CEP", value = "Busca de endereços a partir de um CEP válido")
+			@PathVariable String cep) throws Exception {
 		EnderecoViaCepDTO endereco = pessoaService.buscaEndereco(cep);
 		return endereco != null ? ResponseEntity.ok(endereco) : ResponseEntity.notFound().build();
 	}

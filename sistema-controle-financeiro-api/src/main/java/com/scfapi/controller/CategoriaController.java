@@ -20,7 +20,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.scfapi.model.Categoria;
 import com.scfapi.repository.CategoriaRepository;
 
+import io.swagger.annotations.Api;
+
 @RestController
+@Api(tags = "Categoria")
 @RequestMapping("/categorias")
 public class CategoriaController {
 
