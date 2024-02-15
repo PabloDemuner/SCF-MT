@@ -1,8 +1,10 @@
 package com.scfapi.config.openapi;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpMethod;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -18,6 +20,9 @@ import springfox.documentation.service.Tag;
 @Configuration
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig {
+	
+	@Autowired
+	private SpringFoxExceptionsConfig springFoxExceptionsConfig;
 
     @Bean
     public Docket apiDocket() {
@@ -26,6 +31,11 @@ public class SpringFoxConfig {
                 .apis(RequestHandlerSelectors.basePackage("com.scfapi"))
                 .paths(PathSelectors.any())
                 .build()
+                .useDefaultResponseMessages(false)
+				.globalResponses(HttpMethod.GET, springFoxExceptionsConfig.globalGetResponseMessages())
+				.globalResponses(HttpMethod.POST, springFoxExceptionsConfig.globalPostPutResponseMessages())
+				.globalResponses(HttpMethod.PUT, springFoxExceptionsConfig.globalPostPutResponseMessages())
+				.globalResponses(HttpMethod.DELETE, springFoxExceptionsConfig.globalDeleteResponseMessages())
                 .apiInfo(apiInfo())
                 .tags(
                 		new Tag("Categoria", "Controlador de categorias de lançamentos"), 
