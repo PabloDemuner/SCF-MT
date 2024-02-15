@@ -1,4 +1,4 @@
-package com.scfapi.config.openapi;
+package com.scfapi.config.swagger;
 
 import java.util.Arrays;
 import java.util.List;

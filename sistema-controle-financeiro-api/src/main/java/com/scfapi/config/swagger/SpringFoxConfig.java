@@ -1,4 +1,4 @@
-package com.scfapi.config.openapi;
+package com.scfapi.config.swagger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
