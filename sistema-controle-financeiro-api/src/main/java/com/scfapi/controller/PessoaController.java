@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,13 +43,13 @@ public class PessoaController {
 	@Autowired
 	private PessoaService pessoaService;
 
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
 	public Page<Pessoa> pesquisar(Pageable pageable) {
 		return pessoaRepository.findAll(pageable);
 	}
 	
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public ResponseEntity<PessoaDTO> adicionar(@Valid @RequestBody PessoaDTO pessoa, HttpServletResponse response) {
 		PessoaDTO pessoaSalva = pessoaService.adicionar(pessoa);
@@ -59,21 +60,20 @@ public class PessoaController {
 		return ResponseEntity.created(uri).body(pessoaSalva);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
 	public ResponseEntity<Pessoa> buscaId(@PathVariable Long id) {
 		Pessoa pessoa = pessoaRepository.findById(id).orElse(null);
 		return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
 	}
 
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA')")
 	public void remover(@PathVariable Long id) {
 		pessoaRepository.deleteById(id);
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public ResponseEntity<PessoaDTO> atualizar(@PathVariable Long id, @Valid @RequestBody PessoaDTO pessoa) {
 		PessoaDTO pessoaSalva = pessoaService.atualizar(id, pessoa);
@@ -86,7 +86,7 @@ public class PessoaController {
 		pessoaService.atualizarPropriedadeAtiva(id, ativo);
 	}
 	
-	@GetMapping("/endereco/{cep}")
+	@GetMapping(path = "/endereco/{cep}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA')")
 	public ResponseEntity<EnderecoViaCepDTO> buscaEndereco(
 			@ApiParam(name = "CEP", value = "Busca de endereços a partir de um CEP válido")

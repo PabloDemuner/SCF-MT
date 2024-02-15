@@ -58,31 +58,31 @@ public class LancamentoController {
 	@Autowired
 	private LancamentoRepository lancamentoRepository;
 
-	@GetMapping("/estatisticas/por-categoria")
+	@GetMapping(path = "/estatisticas/por-categoria", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public List<LancamentoEstatisticaCategoriaDTO> porCategoria() {
 		return lancamentoRepository.porCategoria(LocalDate.now());
 	}
 
-	@GetMapping("/estatisticas/por-dia")
+	@GetMapping(path = "/estatisticas/por-dia", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public List<LancamentoEstatisticaDiariaDTO> porDia() {
 		return lancamentoRepository.porDia(LocalDate.now());
 	}
 
-	@GetMapping
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		return lancamentoRepository.filtrar(lancamentoFilter, pageable);
 	}
 
-	@GetMapping(params = "resumo")
+	@GetMapping(path = "resumo", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		return lancamentoRepository.resumir(lancamentoFilter, pageable);
 	}
 
-	@GetMapping("/{id}")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> buscaPorId(@PathVariable Long id) {
 		Lancamento lancamento = lancamentoRepository.findById(id).orElse(null);
@@ -90,7 +90,7 @@ public class LancamentoController {
 	}
 
 	// @ResponseStatus(value = HttpStatus.CREATED)
-	@PostMapping
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> adicionar(@Valid @RequestBody Lancamento lancamento,
 			HttpServletResponse response) {
@@ -102,14 +102,13 @@ public class LancamentoController {
 		return ResponseEntity.created(uri).body(LancamentoSalva);
 	}
 
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO')")
 	public void remover(@PathVariable Long id) {
 		lancamentoRepository.deleteById(id);
 	}
 
-	@PutMapping("/{id}")
+	@PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public ResponseEntity<Lancamento> atualizar(@PathVariable Long id, @Valid @RequestBody Lancamento lancamento) {
 		try {
@@ -120,7 +119,7 @@ public class LancamentoController {
 		}
 	}
 
-	@GetMapping("/relatorios/por-pessoa")
+	@GetMapping(path = "/relatorios/por-pessoa", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public ResponseEntity<byte[]> relatorioLancamentosPessoa(
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
@@ -131,7 +130,7 @@ public class LancamentoController {
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(relatorio);
 	}
 
-	@PostMapping("/anexo")
+	@PostMapping(path = "/anexo", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public S3AnexoDTO uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
 		/*
