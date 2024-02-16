@@ -131,7 +131,8 @@ public class LancamentoController {
 		byte[] relatorio = lancamentoService.relatorioLancamentosPessoa(dataInicio, dataFim);
 
 		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+				.header("Content-Disposition", "attachment; filename=relatorioLancamentos.pdf")
+				//.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
 				.body(relatorio);
 	}
 
