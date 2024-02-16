@@ -20,10 +20,10 @@ public class PageableSwaggerLancamentos {
 	@ApiModelProperty(example = "Teste", value = "Descrição do lançamento")
 	private String descricao;
 
-	@ApiModelProperty(example = "2023-01-01", value = "Data vencimento inicial")
+	@ApiModelProperty(example = "2024-01-01", value = "Data vencimento inicial")
 	private LocalDate dataVencimentoApartir;
 
-	@ApiModelProperty(example = "2023-12-30", value = "Data vencimento final")
+	@ApiModelProperty(example = "2024-12-30", value = "Data vencimento final")
 	private LocalDate dataVencimentoAte;
 
 	@ApiModelProperty(example = "0", value = "Número da página(começa em 0)")

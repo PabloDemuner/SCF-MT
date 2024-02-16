@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -95,8 +96,10 @@ public class LancamentoController {
 	public ResponseEntity<Lancamento> adicionar(@Valid @RequestBody Lancamento lancamento,
 			HttpServletResponse response) {
 		Lancamento LancamentoSalva = lancamentoService.salvar(lancamento);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+				.path("/{id}")
 				.buildAndExpand(LancamentoSalva.getId()).toUri();
+		
 		response.setHeader("Location", uri.toASCIIString());
 
 		return ResponseEntity.created(uri).body(LancamentoSalva);
@@ -119,7 +122,7 @@ public class LancamentoController {
 		}
 	}
 
-	@GetMapping(path = "/relatorios/por-pessoa", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/relatorios/por-pessoa", produces = MediaType.APPLICATION_PDF_VALUE)
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO')")
 	public ResponseEntity<byte[]> relatorioLancamentosPessoa(
 			@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate dataInicio,
@@ -127,10 +130,13 @@ public class LancamentoController {
 
 		byte[] relatorio = lancamentoService.relatorioLancamentosPessoa(dataInicio, dataFim);
 
-		return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE).body(relatorio);
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+				.body(relatorio);
 	}
 
-	@PostMapping(path = "/anexo", produces = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(path = "/anexo")
+	@ApiOperation(value = "Anexos do cadastro de lançamentos", hidden = true)
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO')")
 	public S3AnexoDTO uploadAnexo(@RequestParam MultipartFile anexo) throws IOException {
 		/*
